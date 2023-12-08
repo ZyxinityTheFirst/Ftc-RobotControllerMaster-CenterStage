@@ -2,14 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "BruhWhyBruh")
+import org.firstinspires.ftc.teamcode.Constants.ServoConstants;
+
+@TeleOp(name = "BruhWhyTheSecond")
 public class DriveCodeV2 extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -18,27 +19,39 @@ public class DriveCodeV2 extends LinearOpMode {
     private DcMotor BL = null;
     private DcMotor FR = null;
     private DcMotor BR = null;
-    private DcMotor liftMotor = null;
-    private DcMotor liftMotorMain = null;
-    double mainLiftPower;
-    double liftPower;
-    boolean lockedIn = false;
+    private DcMotor leftMotor, rightMotor = null;
+    private double closeLeft, closeRight, openRight, openLeft;
+    //    private DcMotor liftMotor, liftMotor1 = null;
+    double liftPower = 0;
     double speedLimiter = 1.0;
-    private Servo planeServo;
-    double servoPos = 0.1;
+    private Servo planeServo, leftServo, rightServo;
+//    private Servo left, right = null;
+//    private boolean lockedIn = false;
+//    double servoPos = 0.1;
+//    double constantSpeed = 0;
 
     @Override
     public void runOpMode() {
 
+        openLeft = ServoConstants.openServoPosLeft;
+        openRight = ServoConstants.openServoPosRight;
+        closeLeft = ServoConstants.closeServoPosLeft;
+        closeRight = ServoConstants.closeServoPosRight;
+
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        FL  = hardwareMap.get(DcMotor.class, "FL");
-        BL  = hardwareMap.get(DcMotor.class, "BL");
+        FL = hardwareMap.get(DcMotor.class, "FL");
+        BL = hardwareMap.get(DcMotor.class, "BL");
         FR = hardwareMap.get(DcMotor.class, "FR");
         BR = hardwareMap.get(DcMotor.class, "BR");
-        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
-        liftMotorMain = hardwareMap.get(DcMotor.class, "liftMotorMain");
+
+        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        rightMotor = hardwareMap.get(DcMotor.class,  "rightMotor");
+
         planeServo = hardwareMap.get(Servo.class, "planeServo");
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
+
 
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
@@ -46,10 +59,10 @@ public class DriveCodeV2 extends LinearOpMode {
         BR.setDirection(DcMotor.Direction.FORWARD);
 
 
-        //Test with 15259 for encoder use.
-        //motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //FL.setTargetPosition(0);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -57,70 +70,84 @@ public class DriveCodeV2 extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (gamepad1.dpad_down){
+
+            if (gamepad1.dpad_down) {
                 speedLimiter = 2;
-            }
-            else if(gamepad1.dpad_up){
+            } else if (gamepad1.dpad_up) {
                 speedLimiter = 1;
-            }
-            else if(gamepad1.dpad_right){
+            } else if (gamepad1.dpad_right) {
                 speedLimiter = 1.65;
             }
 
-            liftPower = gamepad1.left_trigger +- gamepad1.right_trigger;
-            liftMotor.setPower(liftPower);
+            double servoThing = gamepad2.left_stick_y;
 
-            if((gamepad1.left_trigger +- gamepad1.right_trigger == 0) && lockedIn){
-                //Configure power level to keep robot in the air
-                liftMotor.setPower(0.2);
+            if(servoThing > 0){
+                leftServo.setPosition(openLeft);
+                rightServo.setPosition(openRight);
             }
-            else if((gamepad1.left_trigger +- gamepad1.right_trigger == 0)){
-                liftMotor.setPower(0.069);
-            }
-
-
-            mainLiftPower = gamepad2.left_trigger +- gamepad2.right_trigger;
-            liftMotorMain.setPower(mainLiftPower);
-
-            if(mainLiftPower == 0){
-                //Yet to configure
-                liftMotorMain.setPower(0.2);
+            else if(servoThing < 0){
+                leftServo.setPosition(closeLeft);
+                rightServo.setPosition(closeRight);
             }
 
+            liftPower = -gamepad2.right_stick_x;
 
-//            if(gamepad1.a){
-//                servo.setPosition(0);
+            if (liftPower < 0) {
+                liftPower /= 2;
+                leftMotor.setPower(liftPower);
+                rightMotor.setPower(-liftPower);
+            }
+            else if(liftPower > 0){
+                liftPower /= 4;
+                leftMotor.setPower(liftPower);
+                rightMotor.setPower(-liftPower);
+            }
+            else if(liftPower == 0){
+                leftMotor.setPower(0.0069);
+                rightMotor.setPower(-0.0069);
+                rightMotor.setPower(-0.0069);
+            }
+
+//                liftMotor.setPower(liftPower);
+//                liftMotor1.setPower(-liftPower);
+            if (gamepad1.x) {
+                planeServo.setPosition(0.8);   //Parth Patel was here
+            }
+
+//                if (gamepad1.b) {
+//                    left.setPosition(0.1);
+//                    right.setPosition(0.1);
+//                } else if (gamepad1.a) {
+//                    left.setPosition(0);
+//                    right.setPosition(0);
+//                }
+
+
+            //            if(lockedIn) {
+//                liftMotor.setPower(constantSpeed);
 //            }
-//            else if (gamepad1.y){
-//                servo.setPosition(0.3);
-//            }
-//            else if (gamepad1.b){
-//                servo.setPosition(-1.5);
-//            }
 
-            if(gamepad1.x){
-                planeServo.setPosition(servoPos);
-            }
 
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   =  -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral = gamepad1.left_stick_x;
-            double yaw     = -gamepad1.right_stick_x;
+            double yaw = -gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
+            double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftBackPower = axial - lateral + yaw;
+            double rightBackPower = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -129,16 +156,16 @@ public class DriveCodeV2 extends LinearOpMode {
             max = Math.max(max, Math.abs(rightBackPower));
 
             if (max > 1.0) {
-                leftFrontPower  /= max;
+                leftFrontPower /= max;
                 rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
+                leftBackPower /= max;
+                rightBackPower /= max;
             }
 
-            leftFrontPower  /= speedLimiter;
+            leftFrontPower /= speedLimiter;
             rightFrontPower /= speedLimiter;
-            leftBackPower   /= speedLimiter;
-            rightBackPower  /= speedLimiter;
+            leftBackPower /= speedLimiter;
+            rightBackPower /= speedLimiter;
 
             // Send calculated power to wheels
             FL.setPower(leftFrontPower);
@@ -150,9 +177,9 @@ public class DriveCodeV2 extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.addData("LiftMotor, MainLiftMotor", "%4.2f, 4.2f", liftMotor.getPower(), liftMotorMain.getPower());
             telemetry.addData("Current speedLimiter: ", speedLimiter);
             telemetry.addData("Servo position: ", planeServo.getPosition());
+            telemetry.addData("liftPower: ", liftPower);
             telemetry.update();
         }
     }

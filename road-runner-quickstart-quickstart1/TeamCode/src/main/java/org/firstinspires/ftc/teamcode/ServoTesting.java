@@ -4,9 +4,10 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Constants.ServoConstants;
 
 @TeleOp(name = "ServoTestingPosition")
 public class ServoTesting extends LinearOpMode {
@@ -17,13 +18,14 @@ public class ServoTesting extends LinearOpMode {
     private double LeftClose;
     private double servoPos2;
     private ElapsedTime runtime = new ElapsedTime();
-    private Servo leftServo, rightServo;
+    private Servo leftServo, rightServo, planeServo;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         leftServo = hardwareMap.get(Servo.class, "leftServo");
         rightServo = hardwareMap.get(Servo.class, "rightServo");
+        planeServo = hardwareMap.get(Servo.class, "planeServo");
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -60,6 +62,9 @@ public class ServoTesting extends LinearOpMode {
             else if(gamepad1.dpad_up){
                 leftServo.setPosition(LeftClose);
                 rightServo.setPosition(RightClose);
+            }
+            else if(gamepad1.right_bumper){
+                planeServo.setPosition(ServoConstants.servoPos);
             }
 
             telemetry.addData("ServoDropperPos: ", RightClose);

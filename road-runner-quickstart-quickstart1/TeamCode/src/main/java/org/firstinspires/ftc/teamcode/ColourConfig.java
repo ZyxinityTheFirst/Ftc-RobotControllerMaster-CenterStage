@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.ColourConstants.lowerCb;
-import static org.firstinspires.ftc.teamcode.ColourConstants.lowerCr;
-import static org.firstinspires.ftc.teamcode.ColourConstants.lowerY;
-import static org.firstinspires.ftc.teamcode.ColourConstants.upperCb;
-import static org.firstinspires.ftc.teamcode.ColourConstants.upperCr;
-import static org.firstinspires.ftc.teamcode.ColourConstants.upperY;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerCb;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerCr;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerY;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperCb;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperCr;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperY;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Constants.ColourConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;

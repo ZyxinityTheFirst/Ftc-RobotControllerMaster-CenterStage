@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ServoConstants;
+import org.firstinspires.ftc.teamcode.Constants.ServoConstants;
 
 @TeleOp(name = "BruhWhy123")
 public class DriveCode extends LinearOpMode {
@@ -86,25 +86,33 @@ public class DriveCode extends LinearOpMode {
 
 
 
-           if(gamepad1.a){
+           if(gamepad1.left_bumper){
                leftServo.setPosition(openLeft);
                rightServo.setPosition(openRight);
            }
-           else if(gamepad1.b){
+           else if(gamepad1.right_bumper){
                leftServo.setPosition(closeLeft);
                rightServo.setPosition(closeRight);
            }
 
+           //- mean going up so make that faster and when liftpower positive make it slower
            liftPower = gamepad1.left_trigger + -gamepad1.right_trigger;
 
 
-            if (liftPower != 0) {
+
+            if (liftPower < 0) {
+                liftPower /= 2;
+                leftMotor.setPower(liftPower);
+                rightMotor.setPower(-liftPower);
+            }
+            else if(liftPower > 0){
+                liftPower /= 4;
                 leftMotor.setPower(liftPower);
                 rightMotor.setPower(-liftPower);
             }
             else if(liftPower == 0){
-                leftMotor.setPower(0.01);
-                rightMotor.setPower(-0.01);
+                leftMotor.setPower(0.0069);
+                rightMotor.setPower(-0.0069);
             }
 
 //                liftMotor.setPower(liftPower);
