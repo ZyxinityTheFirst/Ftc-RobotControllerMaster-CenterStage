@@ -25,6 +25,8 @@ public class DriveCodeV2 extends LinearOpMode {
     double liftPower = 0;
     double speedLimiter = 1.0;
     private Servo planeServo, leftServo, rightServo;
+
+    private boolean open = true;
 //    private Servo left, right = null;
 //    private boolean lockedIn = false;
 //    double servoPos = 0.1;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package TestFile;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -18,7 +18,7 @@ public class ServoTesting extends LinearOpMode {
     private double LeftClose;
     private double servoPos2;
     private ElapsedTime runtime = new ElapsedTime();
-    private Servo leftServo, rightServo, planeServo;
+    private Servo leftServo, rightServo, planeServo, servo1, servo2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,6 +26,8 @@ public class ServoTesting extends LinearOpMode {
         leftServo = hardwareMap.get(Servo.class, "leftServo");
         rightServo = hardwareMap.get(Servo.class, "rightServo");
         planeServo = hardwareMap.get(Servo.class, "planeServo");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
+        servo2 = hardwareMap.get(Servo.class, "servo2");
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -44,10 +46,10 @@ public class ServoTesting extends LinearOpMode {
             LeftOpen = currentServoPos3;
 
             if(gamepad1.a){
-                rightServo.setPosition(RightClose);
+                servo1.setPosition(RightClose);
             }
             else if(gamepad1.b){
-                rightServo.setPosition(RightOpen);
+                servo2.setPosition(RightOpen);
             }
             else if(gamepad1.x){
                 leftServo.setPosition(LeftOpen);

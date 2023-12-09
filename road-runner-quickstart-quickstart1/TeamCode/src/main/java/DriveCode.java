@@ -27,6 +27,7 @@ public class DriveCode extends LinearOpMode {
 //    private boolean lockedIn = false;
 //    double servoPos = 0.1;
 //    double constantSpeed = 0;
+    private boolean open = true;
 
     @Override
     public void runOpMode() {
