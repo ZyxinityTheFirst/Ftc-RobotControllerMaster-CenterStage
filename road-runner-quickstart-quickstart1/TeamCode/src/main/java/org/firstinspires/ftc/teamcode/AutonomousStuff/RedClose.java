@@ -37,7 +37,7 @@ public class RedClose extends LinearOpMode {
 
         Pose2d redClose = new Pose2d(14, -61, Math.toRadians(90));
 
-        servoDropper = hardwareMap.get(Servo.class,"servoDropper");
+        servoDropper = hardwareMap.get(Servo.class, "servoDropper");
         leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
         rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
         leftServo = hardwareMap.get(Servo.class, "leftServo");
@@ -58,10 +58,9 @@ public class RedClose extends LinearOpMode {
         drive.setPoseEstimate(redClose);
 
 
-
         //HARDEST PATHWAY DONE
         TrajectorySequence redCloseLeft = drive.trajectorySequenceBuilder(redClose)
-                .addTemporalMarker(0, ()->{
+                .addTemporalMarker(0, () -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -71,15 +70,15 @@ public class RedClose extends LinearOpMode {
                     leftMotor.setPower(0.1);
                     rightMotor.setPower(-0.1);
                 })
-                .splineToLinearHeading(new Pose2d(7.5,-36), Math.toRadians(180))
-                .addTemporalMarker(() ->{
+                .splineToLinearHeading(new Pose2d(7.5, -36), Math.toRadians(180))
+                .addTemporalMarker(() -> {
                     dropServo(servoDropper);
                 })
                 .waitSeconds(0.5)
 
                 //*, Math.toRadians(-90)*/
-                .lineToConstantHeading(new Vector2d(45,-23))
-                .addTemporalMarker(2.5,() ->{
+                .lineToConstantHeading(new Vector2d(45, -23))
+                .addTemporalMarker(2.5, () -> {
 
                     leftMotor.setTargetPosition(MotorConstants.backBoard);
                     rightMotor.setTargetPosition(-MotorConstants.backBoard);
@@ -92,11 +91,11 @@ public class RedClose extends LinearOpMode {
 
                 })
                 .waitSeconds(2.0)
-                .addTemporalMarker(() ->{
-                    dropServoV2(leftServo,rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
+                .addTemporalMarker(() -> {
+                    dropServoV2(leftServo, rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
                 })
                 .waitSeconds(0.5)
-                .addTemporalMarker(() ->{
+                .addTemporalMarker(() -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -131,11 +130,9 @@ public class RedClose extends LinearOpMode {
                 .build();
 
 
-
-
         //BLUE RIGHT
         TrajectorySequence redCloseRight = drive.trajectorySequenceBuilder(redClose)
-                .addTemporalMarker(0, ()->{
+                .addTemporalMarker(0, () -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -145,17 +142,17 @@ public class RedClose extends LinearOpMode {
                     leftMotor.setPower(0.1);
                     rightMotor.setPower(-0.1);
                 })
-                .splineTo(new Vector2d(29,-29), Math.toRadians(0))
+                .splineTo(new Vector2d(29, -29), Math.toRadians(0))
 //              .lineToConstantHeading(new Vector2d(23,25))
-                .addTemporalMarker(() ->{
+                .addTemporalMarker(() -> {
                     dropServo(servoDropper);
                 })
                 .waitSeconds(0.5)
 
                 //*, Math.toRadians(-90)*/
-                .lineToConstantHeading(new Vector2d(45.5,-41))
+                .lineToConstantHeading(new Vector2d(45.5, -41))
 //                                        .lineToLinearHeading(new Pose2d(48,40,Math.toRadians(0)))
-                .addTemporalMarker(2.5,() ->{
+                .addTemporalMarker(2.5, () -> {
 
                     leftMotor.setTargetPosition(MotorConstants.backBoard);
                     rightMotor.setTargetPosition(-MotorConstants.backBoard);
@@ -168,11 +165,11 @@ public class RedClose extends LinearOpMode {
 
                 })
                 .waitSeconds(2.0)
-                .addTemporalMarker(() ->{
-                    dropServoV2(leftServo,rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
+                .addTemporalMarker(() -> {
+                    dropServoV2(leftServo, rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
                 })
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{
+                .addTemporalMarker(() -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -206,10 +203,9 @@ public class RedClose extends LinearOpMode {
                 .build();
 
 
-
         //CENTER
         TrajectorySequence redCloseCenter = drive.trajectorySequenceBuilder(redClose)
-                .addTemporalMarker(0, ()->{
+                .addTemporalMarker(0, () -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -220,14 +216,14 @@ public class RedClose extends LinearOpMode {
                     rightMotor.setPower(-0.1);
                 })
                 .forward(41)
-                .addTemporalMarker(() ->{
+                .addTemporalMarker(() -> {
                     dropServo(servoDropper);
                 })
                 .waitSeconds(0.5)
                 .back(20.5)
                 //*, Math.toRadians(-90)*/s
-                .lineToLinearHeading(new Pose2d(46.5,-29.5,Math.toRadians(0)))
-                .addTemporalMarker(() ->{
+                .lineToLinearHeading(new Pose2d(46.5, -29.5, Math.toRadians(0)))
+                .addTemporalMarker(() -> {
 
                     leftMotor.setTargetPosition(MotorConstants.backBoard);
                     rightMotor.setTargetPosition(-MotorConstants.backBoard);
@@ -240,11 +236,11 @@ public class RedClose extends LinearOpMode {
 
                 })
                 .waitSeconds(4.0)
-                .addTemporalMarker(() ->{
-                    dropServoV2(leftServo,rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
+                .addTemporalMarker(() -> {
+                    dropServoV2(leftServo, rightServo, ServoConstants.openServoPosLeft, ServoConstants.openServoPosRight);
                 })
                 .waitSeconds(0.5)
-                .addTemporalMarker(()->{
+                .addTemporalMarker(() -> {
                     leftMotor.setTargetPosition(MotorConstants.rest);
                     rightMotor.setTargetPosition(-MotorConstants.rest);
 
@@ -275,7 +271,6 @@ public class RedClose extends LinearOpMode {
                 .build();
 
 
-
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -288,7 +283,9 @@ public class RedClose extends LinearOpMode {
                 telemetry.update();
             }
         });
-        FtcDashboard.getInstance().startCameraStream(webcam,0);
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
+
+        dropServoV2(leftServo, rightServo, ServoConstants.closeServoPosLeft, ServoConstants.closeServoPosRight);
 
         while (!isStarted() && !isStopRequested()) {
 
@@ -301,24 +298,22 @@ public class RedClose extends LinearOpMode {
 
             // Don't burn CPU cycles busy-looping in this sample
             sleep(500);
-            dropServoV2(leftServo, rightServo, ServoConstants.closeServoPosLeft, ServoConstants.closeServoPosRight);
         }
         snapshotAnalysis = pipeline.getQuadrant12();
 
+        FtcDashboard.getInstance().stopCameraStream();
         waitForStart();
 
-        if(opModeIsActive()){}
-        if(snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.ONE) {
-            drive.followTrajectorySequence(redCloseLeft);
-        }
-        else if(snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.THREE) {
-            drive.followTrajectorySequence(redCloseRight);
-        }
-        else if(snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.TWO) {
-            drive.followTrajectorySequence(redCloseCenter);
-        }
-        else{
-            drive.followTrajectorySequence(redCloseCenter);
+        if (opModeIsActive()) {
+            if (snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.ONE) {
+                drive.followTrajectorySequence(redCloseLeft);
+            } else if (snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.THREE) {
+                drive.followTrajectorySequence(redCloseRight);
+            } else if (snapshotAnalysis == ColourConfig.QuadrantPipelineDetermination12.Quadrant12.TWO) {
+                drive.followTrajectorySequence(redCloseCenter);
+            } else {
+                drive.followTrajectorySequence(redCloseCenter);
+            }
         }
     }
 

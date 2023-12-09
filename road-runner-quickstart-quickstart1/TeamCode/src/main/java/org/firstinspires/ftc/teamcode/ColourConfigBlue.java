@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerCb;
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerCr;
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.lowerY;
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperCb;
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperCr;
-import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.upperY;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueLowerCb;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueLowerCr;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueLowerY;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueUpperCb;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueUpperCr;
+import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueUpperY;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -29,21 +29,19 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.List;
-
-@Autonomous(name = "ConfigColours")
-public class ColourConfig extends LinearOpMode {
-
+@Autonomous(name = "ConfigColoursBlue")
+public class ColourConfigBlue extends LinearOpMode {
     private OpenCvWebcam webcam;
-    private QuadrantPipelineDetermination12 pipeline1;
-
-    private static Scalar lowerBound = new Scalar(lowerY, lowerCr, lowerCb);
-    private static Scalar upperBound = new Scalar(upperY, upperCr, upperCb);
-
+    private ColourConfigBlue.QuadrantPipelineDeterminationBlue12 pipeline1;
+    private ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12 snapshotAnalysisBlue = QuadrantPipelineDeterminationBlue12.QuadrantBlue12.ONE;
+    private static Scalar blueLowerBound = new Scalar(blueLowerY, blueLowerCr, blueLowerCb);
+    private static Scalar blueUpperBound = new Scalar(blueUpperY, blueUpperCr, blueUpperCb);
     @Override
     public void runOpMode() throws InterruptedException {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);        pipeline1 = new ColourConfig.QuadrantPipelineDetermination12();
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        pipeline1 = new ColourConfigBlue.QuadrantPipelineDeterminationBlue12();
         webcam.setPipeline(pipeline1);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -76,29 +74,30 @@ public class ColourConfig extends LinearOpMode {
             int currentUpperCr = ColourConstants.upperCr;
             int currentUpperCb = ColourConstants.upperCb;
 
-            lowerBound.val[0] = currentLowerY;
-            lowerBound.val[1] = currentLowerCr;
-            lowerBound.val[2] = currentLowerCb;
-            upperBound.val[0] = currentUpperY;
-            upperBound.val[1] = currentUpperCr;
-            upperBound.val[2] = currentUpperCb;
+            blueLowerBound.val[0] = currentLowerY;
+            blueLowerBound.val[1] = currentLowerCr;
+            blueLowerBound.val[2] = currentLowerCb;
+            blueUpperBound.val[0] = currentUpperY;
+            blueUpperBound.val[1] = currentUpperCr;
+            blueUpperBound.val[2] = currentUpperCb;
 
-            telemetry.addData("Current Quadrant: ", pipeline1.getQuadrant12());
-            telemetry.addData("Current center X: ", pipeline1.getCenterX());
+            telemetry.addData("Current Quadrant: ", pipeline1.getQuadrantBlue12());
+            telemetry.addData("Current center X: ", pipeline1.getCenterBlueX());
             telemetry.update();
 
+            snapshotAnalysisBlue = pipeline1.getQuadrantBlue12();
             FtcDashboard.getInstance().updateConfig();
         }
 
         FtcDashboard.getInstance().stopCameraStream();
     }
 
-    public static class QuadrantPipelineDetermination12 extends OpenCvPipeline {
+    public static class QuadrantPipelineDeterminationBlue12 extends OpenCvPipeline {
         private Rect largestQuadrantRect = null;
         private double maxQuadrantArea = 0;
 
-        public volatile Quadrant12 position = Quadrant12.ONE;
-        double centerX = 0;
+        public volatile ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12 bluePosition = ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.ONE;
+        double centerBlueX = 0;
 
         @Override
         public Mat processFrame(Mat input) {
@@ -106,7 +105,7 @@ public class ColourConfig extends LinearOpMode {
             Imgproc.cvtColor(input, YCrCB, Imgproc.COLOR_RGB2YCrCb);
 
             Mat isolatedImage = new Mat();
-            Core.inRange(YCrCB, lowerBound, upperBound, isolatedImage);
+            Core.inRange(YCrCB, blueLowerBound, blueUpperBound, isolatedImage);
 
             List<MatOfPoint> contours = new ArrayList<>();
             Imgproc.findContours(isolatedImage, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -127,7 +126,7 @@ public class ColourConfig extends LinearOpMode {
                     if (center.x >= xStart && center.x < xEnd) {
                         quadrantContours.add(contour);
                     }
-                    centerX = center.x;
+                    centerBlueX = center.x;
                 }
 
                 double quadrantArea = 0;
@@ -147,40 +146,40 @@ public class ColourConfig extends LinearOpMode {
                         new Point(largestQuadrantRect.x + largestQuadrantRect.width, largestQuadrantRect.y + largestQuadrantRect.height),
                         new Scalar(0, 0, 255), 2);
 
-                if (centerX < 200) {
-                    position = Quadrant12.ONE;
-                } else if (centerX > 200 && centerX < 400) {
-                    position = Quadrant12.TWO;
+                if (centerBlueX < 200) {
+                    bluePosition = ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.ONE;
+                } else if (centerBlueX > 200 && centerBlueX < 400) {
+                    bluePosition = ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.TWO;
                 } else {
-                    position = Quadrant12.THREE;
+                    bluePosition = ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.THREE;
                 }
             }
 
             return isolatedImage;
         }
 
-        public Quadrant12 getQuadrant12() {
-            return position;
+        public ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12 getQuadrantBlue12() {
+            return bluePosition;
         }
 
-        public double getCenterX(){
-            return centerX;
+        public double getCenterBlueX(){
+            return centerBlueX;
         }
 
-        public int getX() {
+        public int getBlueX() {
             if (largestQuadrantRect != null) {
                 return largestQuadrantRect.x;
             }
             return -1;
         }
-        public int getY(){
+        public int getBlueY(){
             if (largestQuadrantRect != null){
                 return  largestQuadrantRect.y;
             }
             return -1;
         }
 
-        public enum Quadrant12 {
+        public enum QuadrantBlue12 {
             ONE,
             TWO,
             THREE
