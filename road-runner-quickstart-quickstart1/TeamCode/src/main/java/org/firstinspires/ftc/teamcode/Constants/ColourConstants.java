@@ -20,13 +20,13 @@ public class ColourConstants {
     public static int upperCb = 130;
 
     //Lower and upperBound values for the solo 'blue' cup or new element created by the design team.
-    public static int blueLowerY = 0;
+    public static int blueLowerY = 40;
     public static int blueLowerCr = 0;
     public static int blueLowerCb = 0;
 
-    public static int blueUpperY = 0;
-    public static int blueUpperCr = 0;
-    public static int blueUpperCb = 0;
+    public static int blueUpperY = 55;
+    public static int blueUpperCr = 180;
+    public static int blueUpperCb = 190;
 
 
 }

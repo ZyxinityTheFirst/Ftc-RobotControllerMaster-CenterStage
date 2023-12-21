@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutonomousStuff;
 
 import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueLowerCb;
 import static org.firstinspires.ftc.teamcode.Constants.ColourConstants.blueLowerCr;
@@ -67,12 +67,12 @@ public class ColourConfigBlue extends LinearOpMode {
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
 
-            int currentLowerY = ColourConstants.lowerY;
-            int currentLowerCr = ColourConstants.lowerCr;
-            int currentLowerCb = ColourConstants.lowerCb;
-            int currentUpperY = ColourConstants.upperY;
-            int currentUpperCr = ColourConstants.upperCr;
-            int currentUpperCb = ColourConstants.upperCb;
+            int currentLowerY = ColourConstants.blueLowerY;
+            int currentLowerCr = ColourConstants.blueLowerCr;
+            int currentLowerCb = ColourConstants.blueLowerCb;
+            int currentUpperY = ColourConstants.blueUpperY;
+            int currentUpperCr = ColourConstants.blueUpperCr;
+            int currentUpperCb = ColourConstants.blueUpperCb;
 
             blueLowerBound.val[0] = currentLowerY;
             blueLowerBound.val[1] = currentLowerCr;
@@ -142,7 +142,7 @@ public class ColourConfigBlue extends LinearOpMode {
             }
 
             if (largestQuadrantRect != null) {
-                Imgproc.rectangle(input, new Point(largestQuadrantRect.x, largestQuadrantRect.y),
+                Imgproc.rectangle(isolatedImage, new Point(largestQuadrantRect.x, largestQuadrantRect.y),
                         new Point(largestQuadrantRect.x + largestQuadrantRect.width, largestQuadrantRect.y + largestQuadrantRect.height),
                         new Scalar(0, 0, 255), 2);
 

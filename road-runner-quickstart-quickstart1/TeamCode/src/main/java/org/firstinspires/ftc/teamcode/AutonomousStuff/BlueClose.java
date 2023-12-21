@@ -10,13 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.ColourConfig;
-import org.firstinspires.ftc.teamcode.ColourConfigBlue;
 import org.firstinspires.ftc.teamcode.Constants.MotorConstants;
 import org.firstinspires.ftc.teamcode.Constants.ServoConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -82,7 +79,7 @@ public class BlueClose extends LinearOpMode {
                 .waitSeconds(0.5)
                 .back(20.5)
                 //*, Math.toRadians(-90)*/
-                .lineToLinearHeading(new Pose2d(45,43,Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(46.5,38,Math.toRadians(0)))
                 .addTemporalMarker(2.5,() ->{
 
                     leftMotor.setTargetPosition(MotorConstants.backBoard);
@@ -157,7 +154,7 @@ public class BlueClose extends LinearOpMode {
                 .waitSeconds(0.5)
 
                 //*, Math.toRadians(-90)*/
-                .lineToConstantHeading(new Vector2d(45,40))
+                .lineToConstantHeading(new Vector2d(46.5,40))
 //                                        .lineToLinearHeading(new Pose2d(48,40,Math.toRadians(0)))
                 .addTemporalMarker(2.5,() ->{
 
@@ -266,7 +263,7 @@ public class BlueClose extends LinearOpMode {
                 .waitSeconds(0.5)
 
                 //*, Math.toRadians(-90)*/
-                .lineToConstantHeading(new Vector2d(45,26.5))
+                .lineToConstantHeading(new Vector2d(46.5,26.5))
                 .addTemporalMarker(2.5,() ->{
 
                     leftMotor.setTargetPosition(MotorConstants.backBoard);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,9 @@ import org.firstinspires.ftc.teamcode.Constants.ServoConstants;
 @TeleOp(name = "BruhWhyTheSecond")
 public class DriveCodeV2 extends LinearOpMode {
 
+    //Declare our PIDController for later use.
+    private PIDController controller;
+
     // Declare OpMode members for each of the 4 motors.
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor FL = null;
@@ -21,19 +25,20 @@ public class DriveCodeV2 extends LinearOpMode {
     private DcMotor BR = null;
     private DcMotor leftMotor, rightMotor = null;
     private double closeLeft, closeRight, openRight, openLeft;
-    //    private DcMotor liftMotor, liftMotor1 = null;
     double liftPower = 0;
     double speedLimiter = 1.0;
     private Servo planeServo, leftServo, rightServo;
-
-    private boolean open = true;
-//    private Servo left, right = null;
-//    private boolean lockedIn = false;
-//    double servoPos = 0.1;
-//    double constantSpeed = 0;
+    private boolean isOpen = false;
+    private boolean wasPressed = false;
+    private double p = PIDFLoop.p, i = PIDFLoop.i,d = PIDFLoop.d;
+    private double f = PIDFLoop.f;
+    private double target = 0;
+    private final double tick_in_degree = 1680.0 / 360.0;
 
     @Override
     public void runOpMode() {
+
+        int armPos = leftMotor.getCurrentPosition();
 
         openLeft = ServoConstants.openServoPosLeft;
         openRight = ServoConstants.openServoPosRight;
@@ -59,6 +64,11 @@ public class DriveCodeV2 extends LinearOpMode {
         BL.setDirection(DcMotor.Direction.REVERSE);
         FR.setDirection(DcMotor.Direction.FORWARD);
         BR.setDirection(DcMotor.Direction.FORWARD);
+
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,18 +98,22 @@ public class DriveCodeV2 extends LinearOpMode {
                 speedLimiter = 1.65;
             }
 
-            double servoThing = gamepad2.left_stick_y;
+            boolean isPressed = gamepad1.left_bumper;
 
-            if(servoThing > 0){
-                leftServo.setPosition(openLeft);
-                rightServo.setPosition(openRight);
-            }
-            else if(servoThing < 0){
-                leftServo.setPosition(closeLeft);
-                rightServo.setPosition(closeRight);
+            if(isPressed && !wasPressed){
+                if(isOpen){
+                    leftServo.setPosition(closeLeft);
+                    rightServo.setPosition(closeRight);
+                } else {
+                    leftServo.setPosition(openLeft);
+                    rightServo.setPosition(openRight);
+                }
+                isOpen = !isOpen; // Toggle the state
             }
 
-            liftPower = -gamepad2.right_stick_x;
+            wasPressed = isPressed; // Update the previous state of the button
+
+            liftPower = -gamepad2.right_stick_y;
 
             if (liftPower < 0) {
                 liftPower /= 2;
@@ -112,29 +126,18 @@ public class DriveCodeV2 extends LinearOpMode {
                 rightMotor.setPower(-liftPower);
             }
             else if(liftPower == 0){
-                leftMotor.setPower(0.0069);
-                rightMotor.setPower(-0.0069);
-                rightMotor.setPower(-0.0069);
+                controller.setPID(p,i,d);
+                double pid = controller.calculate(armPos, target);
+                double ff = Math.cos(Math.toRadians(target / tick_in_degree)) * f;
+                double power = pid * ff;
+
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
             }
 
-//                liftMotor.setPower(liftPower);
-//                liftMotor1.setPower(-liftPower);
             if (gamepad1.x) {
                 planeServo.setPosition(0.8);   //Parth Patel was here
             }
-
-//                if (gamepad1.b) {
-//                    left.setPosition(0.1);
-//                    right.setPosition(0.1);
-//                } else if (gamepad1.a) {
-//                    left.setPosition(0);
-//                    right.setPosition(0);
-//                }
-
-
-            //            if(lockedIn) {
-//                liftMotor.setPower(constantSpeed);
-//            }
 
 
             double max;
