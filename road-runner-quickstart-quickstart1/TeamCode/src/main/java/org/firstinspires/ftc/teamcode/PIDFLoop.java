@@ -40,7 +40,7 @@ public class PIDFLoop extends OpMode {
         double power = pid * ff;
 
         leftMotor.setPower(power);
-        rightMotor.setPower(power);
+        rightMotor.setPower(-power);
 
         telemetry.addData("pos ", armPos);
         telemetry.addData("target ", target);

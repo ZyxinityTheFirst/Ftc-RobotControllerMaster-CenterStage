@@ -132,7 +132,7 @@ public class DriveCodeV2 extends LinearOpMode {
                 double power = pid * ff;
 
                 leftMotor.setPower(power);
-                rightMotor.setPower(power);
+                rightMotor.setPower(-power);
             }
 
             if (gamepad1.x) {
