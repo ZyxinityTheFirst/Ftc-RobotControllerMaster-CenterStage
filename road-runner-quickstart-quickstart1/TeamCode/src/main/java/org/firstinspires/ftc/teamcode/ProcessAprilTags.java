@@ -20,10 +20,7 @@ public class ProcessAprilTags extends LinearOpMode {
 
     static final double FEET_PER_METER = 3.28084;
 
-    // Lens intrinsics
-    // UNITS ARE PIXELS
-    // NOTE: this calibration is for the C920 webcam at 800x448.
-    // You will need to do your own calibration for other configurations!
+
     double fx = 578.272;
     double fy = 578.272;
     double cx = 402.145;

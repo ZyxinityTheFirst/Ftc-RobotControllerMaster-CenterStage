@@ -84,11 +84,11 @@ public class ColourSubMat extends LinearOpMode {
 
         private Mat finalMat = new Mat();
 
-        public static int blueLeftX = (int)(800 * (1.0 / 3.0)); // adjusted
-        public static int blueLeftY = (int)(367 * (4.0 / 9.0)); // adjusted
+        public static int blueLeftX = SquareConstant.blueLeftX; // adjusted
+        public static int blueLeftY = SquareConstant.blueLeftY; // adjusted
 
-        public static int blueCenterX = (int)(1175 * (1.0 / 3.0)); // adjusted
-        public static int blueCenterY = (int)(117 * (4.0 / 9.0)); // adjusted
+        public static int blueCenterX = SquareConstant.blueCenterX; // adjusted
+        public static int blueCenterY = SquareConstant.blueCenterY; // adjusted
 
         public static int redLeftX = SquareConstant.redLeftX; // adjusted
         public static int redLeftY = SquareConstant.redLeftY; // adjusted

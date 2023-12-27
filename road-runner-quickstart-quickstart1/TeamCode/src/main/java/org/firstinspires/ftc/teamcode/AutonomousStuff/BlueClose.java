@@ -22,8 +22,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name = "BlueCloseSpline")
 public class BlueClose extends LinearOpMode {
     private OpenCvWebcam webcam;
-    private ColourConfigBlue.QuadrantPipelineDeterminationBlue12 pipeline;
-    private ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12 snapshotAnalysis = ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.ONE; // default
     private Servo servoDropper;
     private Servo leftServo, rightServo;
     private ElapsedTime runtime = new ElapsedTime();
@@ -52,9 +50,6 @@ public class BlueClose extends LinearOpMode {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        pipeline = new ColourConfigBlue.QuadrantPipelineDeterminationBlue12();
-        webcam.setPipeline(pipeline);
-
 
         drive.setPoseEstimate(blueClose);
 
@@ -229,17 +224,9 @@ public class BlueClose extends LinearOpMode {
 
         while (!isStarted() && !isStopRequested()) {
 
-            telemetry.addData("Center X values: ", pipeline.getCenterBlueX());
-            telemetry.addData("RealTime Quadrant Analysis: ", pipeline.getQuadrantBlue12());
-            telemetry.update();
-
-
-            snapshotAnalysis = pipeline.getQuadrantBlue12();
-
             // Don't burn CPU cycles busy-looping in this sample
             sleep(500);
         }
-        snapshotAnalysis = pipeline.getQuadrantBlue12();
 
         FtcDashboard.getInstance().stopCameraStream();
 
@@ -324,13 +311,7 @@ public class BlueClose extends LinearOpMode {
 
 
         if (opModeIsActive()) {
-            if (snapshotAnalysis == ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.TWO) {
-                drive.followTrajectorySequence(blueCloseCenter);
-            } else if (snapshotAnalysis == ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.ONE) {
-                drive.followTrajectorySequence(blueCloseLeft);
-            } else if (snapshotAnalysis == ColourConfigBlue.QuadrantPipelineDeterminationBlue12.QuadrantBlue12.THREE) {
-            drive.followTrajectorySequence(blueCloseRight);
-            }
+
         }
     }
     public void dropServo(Servo servo){
